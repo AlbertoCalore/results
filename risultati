@@ -1,0 +1,69 @@
+import yfinance as yf
+import time
+import pandas as pd
+from datetime import date
+from datetime import datetime
+import os
+
+here = os.path.dirname(os.path.realpath(__file__))
+cwd = os.chdir(here)
+test = os.getcwd()
+print(test)
+quit()
+
+#file necessari al funzionamento: calendario.txt e crea un rimanenze.txt
+
+
+cal = pd.read_csv('calendario', index_col=0)     #all'apertura del programma controlla il dataframe
+today = date.today()   
+try:
+    menu = cal.loc[cal['Date'] == str(today)]   #controlla che titoli contengono la data odierna
+except:
+    menu = pd.DataFrame(index=['Date'])
+ 
+try:
+    rrimanenze = pd.read_csv('rimanenze', index_col=0)      #apri il file con le ricerche non terminate
+except:
+    rrimanenze = pd.DataFrame(index=['Date'])
+ric = pd.concat([menu, rrimanenze])     #aggiungo i nuovi elementi
+ric = ric[~ric.index.duplicated()]
+ricerche = list(ric.index)
+print(ric)
+
+while len(ricerche) != 0:     #termina eventualmente la ricerca
+
+
+    ricerche = list(ric.index)
+    
+    wrimanenze = open('rimanenze','w')
+    wrimanenze.write(ric.to_csv())
+    wrimanenze.close()
+
+    print(datetime.now())
+    time.sleep(30)  #controllo a tempo 
+
+    for i in ricerche:     #fai partire un ciclo di ricerca per ogni titolo che soddisfa la condizione
+        tit = yf.Ticker(i)       
+        
+        try:
+            rq = pd.DataFrame(tit.quarterly_earnings)    #cerca i risultati quadrimestrali 
+            
+            if '4Q2020' in rq.index:    #controlla se contiene Q4 2020
+                        
+                print(i)
+                print(rq)
+                
+                os.system("telegram-send -g " + '"' + str("https://it.finance.yahoo.com/quote/") + str(i) + '"')
+                os.system("telegram-send -g " + '"' + str(rq) + '"')
+
+                #longBusinessSummary
+                ric = ric.drop(i)        #rimuovere righe dal dataframe se ho già ottenuto il risultato 
+                print(ric)
+                
+        except:
+            print('Qualche tipo di problema')
+
+os.system("telegram-send -g " + '"' + "Per oggi hai finito" + '"')
+quit()
+
+

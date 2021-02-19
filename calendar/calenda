@@ -1,0 +1,41 @@
+import yfinance as yf
+import pandas as pd
+
+ris = pd.DataFrame(columns=['Date'])
+n = 0
+
+while True:
+    print ("Controllo?(s/n)")
+    sn = input()
+    
+    if sn == 'n':
+        break
+    
+    else:
+        symb = open('sp500', 'r')
+        for line in symb:
+            for word in line.split():
+                
+                n = n+1
+                print(str(n/5)+'%')
+                
+                tit = yf.Ticker(word)
+                try:
+                    date = pd.DataFrame(tit.calendar).iloc[0,0]
+                    row = pd.DataFrame([date], index= [word], columns=['Date'])
+                    ris = ris.append(row)
+                except:
+                    print('no data')
+    
+    cal = ris.sort_values(by = 'Date')
+    print(cal)
+    
+    calendario = open('calendario', 'w')
+    calendario.write(cal.to_csv())
+    calendario.close
+    
+
+    
+
+
+
