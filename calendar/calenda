@@ -32,7 +32,7 @@ while True:
     
     calendario = open('calendario', 'w')
     calendario.write(cal.to_csv())
-    calendario.close
+    calendario.close()
     
 
     
