@@ -13,7 +13,7 @@ cwd = os.chdir(here)
 
 cal = pd.read_csv('calendario', index_col=0)     #all'apertura del programma controlla il dataframe
 today = date.today()   
-menu = cal.loc[cal['Date'] < str(today)]   #controlla che titoli fino ad oggi
+menu = cal.loc[cal['Date'] <= str(today)]   #controlla che titoli fino ad oggi
 ricerche = list(menu.index)
 
 
