@@ -20,7 +20,7 @@ ricerche = list(menu.index)
 while len(ricerche) != 0:     #termina eventualmente la ricerca
 
     cal = pd.read_csv('calendario', index_col=0)
-    menu = cal.loc[cal['Date'] < str(today)]
+    menu = cal.loc[cal['Date'] <= str(today)]
     ricerche = list(menu.index)
     
     print(datetime.now())
