@@ -42,6 +42,7 @@ while len(ricerche) != 0:     #termina eventualmente la ricerca
 
                 cal = cal.drop(i)        #rimuovere righe dal dataframe se ho già ottenuto il risultato
                 print(cal)
+                time.sleep(5)
                 
         except Exception as e:
             print(e)
