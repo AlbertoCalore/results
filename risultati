@@ -43,8 +43,9 @@ while len(ricerche) != 0:     #termina eventualmente la ricerca
                 cal = cal.drop(i)        #rimuovere righe dal dataframe se ho già ottenuto il risultato
                 print(cal)
                 
-        except:
-            print('Qualche tipo di problema')
+        except Exception as e:
+            print(e)
+            
             
     calendario = open('calendario', 'w')    
     calendario.write(cal.to_csv())    #riscrivere il file
