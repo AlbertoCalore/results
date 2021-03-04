@@ -1,0 +1,38 @@
+import yfinance as yf
+import pandas as pd
+from datetime import date
+from datetime import datetime
+import os
+
+here = os.path.dirname(os.path.realpath(__file__))
+cwd = os.chdir(here)
+
+camp = pd.read_csv('campione', index_col=0) #piccolo estratto di calendario
+print(camp)
+ricerche = list(camp.index)
+
+for i in ricerche:
+    
+    tit = yf.Ticker(i)
+    end = camp.at[i, 'Date']
+    
+    rq = pd.DataFrame(tit.quarterly_earnings)
+    print(rq)
+
+    week = tit.history(period='1d', interval='1h', end=str(end))
+    wmean = week.filter(items=['Volume']).mean(axis=0)
+    print(wmean)
+
+    month = tit.history(period='1mo', interval='1h', end=str(end))
+    mmean = month.filter(items=['Volume']).mean(axis=0)
+    print(mmean)
+    
+    print('*'*100)
+    
+    res = open(str(i), 'a+')
+    res.write('titolo: ' + i +'\n') #nome
+    res.write('data pubblicazione: ' + end +'\n') #data pubblicazione
+    res.write(str(rq) + '\n') #risultati
+    res.write('media settimana precendete: ' + str(wmean) +'\n') #media settimana precedente
+    res.write('media mese precedente: ' + str(mmean) +'\n') #media mensile
+    res.write('*'*50 +'\n')

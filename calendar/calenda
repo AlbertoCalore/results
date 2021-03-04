@@ -1,5 +1,9 @@
 import yfinance as yf
 import pandas as pd
+import os
+
+here = os.path.dirname(os.path.realpath(__file__))
+cwd = os.chdir(here)
 
 ris = pd.DataFrame(columns=['Date'])
 n = 0
